@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malla Interactiva</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .semestre {
+      border: 2px solid #333;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px;
+      background-color: #fff;
+      width: fit-content;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .ramo {
+      padding: 5px;
+      margin: 5px 0;
+      background-color: pink;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .ramo.aprobado {
+      background-color: purple;
+      color: white;
+      text-decoration: line-through;
+    }
+    .ramo.bloqueado {
+      background-color: grey;
+      color: white;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>Malla Interactiva</h1>
+  <div id="malla"></div>
+
+  <script>
+    const ramos = {
+      "I": [
+        { codigo: "ACUI051", nombre: "Ingeniería Ambiental" },
+        { codigo: "ACUI055", nombre: "Sociedad y Medio Ambiente" },
+        { codigo: "ACUI075", nombre: "Biología" },
+        { codigo: "CIBA061", nombre: "Matemática y Razonamiento Matemático" },
+        { codigo: "ELECT127", nombre: "Optativo de Formación General I" },
+        { codigo: "FGRA050", nombre: "Educación Física y Salud" },
+        { codigo: "INGE057", nombre: "Comprensión Oral y Escrita" },
+      ],
+      "II": [
+        { codigo: "ACUI060", nombre: "Contaminación y Problemas Ambientales" },
+        { codigo: "ACUI065", nombre: "Elaboración de Informes Técnicos" },
+        { codigo: "CIBA066", nombre: "Física General" },
+        { codigo: "CIBA071", nombre: "Química General e Inorgánica" },
+        { codigo: "CIBA074", nombre: "Cálculo Aplicado a la Ingeniería Ambiental" },
+        { codigo: "ELECT128", nombre: "Optativo de Formación General II" },
+        { codigo: "INGE073", nombre: "Inglés Instrumental Básico" },
+      ],
+      "III": [
+        { codigo: "ACUI070", nombre: "Sistemas Complejos e Interrelaciones" },
+        { codigo: "CIBA077", nombre: "Física Mecánica Aplicada para Ingeniería Ambiental" },
+        { codigo: "CIBA080", nombre: "Química Orgánica" },
+        { codigo: "CIBA082", nombre: "Álgebra Lineal para la Resolución de Problemas" },
+        { codigo: "EARO069", nombre: "Antropología Cultural" },
+        { codigo: "INGE078", nombre: "Inglés Instrumental Intermedio" },
+      ],
+      "IV": [
+        { codigo: "ACUI085", nombre: "Bioquímica" },
+        { codigo: "ACUI128", nombre: "Ciencias Descriptivas de la Tierra" },
+        { codigo: "CIBA088", nombre: "Mecánica de Fluidos y Termodinámica Aplicada a Ingeniería Ambiental" },
+        { codigo: "CIBA090", nombre: "Química Aplicada a Procesos y Medio Ambiente" },
+        { codigo: "DERE097", nombre: "Derecho y Legislación Ambiental Aplicada" },
+        { codigo: "ELECT131", nombre: "Optativo de Formación General III" },
+        { codigo: "INGI071", nombre: "Fundamentos de la Economía" },
+      ],
+      "V": [
+        { codigo: "ACUI106", nombre: "Microbiología Aplicada" },
+        { codigo: "ACUI133", nombre: "Fisiología de la Interacción de los Seres Vivos y el Medio Ambiente" },
+        { codigo: "ACUI140", nombre: "Gestión Ambiental y Sistemas de Certificación" },
+        { codigo: "ACUI145", nombre: "Sistemas de Tratamiento" },
+        { codigo: "CIBA113", nombre: "Fisicoquímica" },
+        { codigo: "INGI076", nombre: "Economía Ambiental" },
+      ],
+      "VI": [
+        { codigo: "ACUI150-19", nombre: "Atmósfera, Clima y Cambio Climático" },
+        { codigo: "ACUI153-19", nombre: "Gestión Integral de Residuos Líquidos y Sólidos" },
+        { codigo: "ACUI156-19", nombre: "Ecología" },
+        { codigo: "CIBA151-19", nombre: "Estadística Aplicada" },
+        { codigo: "ELECT100", nombre: "Optativo de Especialización I" },
+      ],
+      "VII": [
+        { codigo: "ACUI159", nombre: "Eficiencia Energética y Ecodiseño" },
+        { codigo: "ACUI161", nombre: "Reducción, Reutilización y Reciclaje de Residuos" },
+        { codigo: "ACUI163", nombre: "Gestión Integral de Residuos Gaseosos" },
+        { codigo: "ACUI166", nombre: "Evaluación de Impacto Ambiental" },
+        { codigo: "ELECT101", nombre: "Optativo de Especialización II" },
+        { codigo: "ELECT111", nombre: "Optativo de Especialización III" },
+      ],
+      "VIII": [
+        { codigo: "ACUI169", nombre: "Modelos de Remediación" },
+        { codigo: "ACUI171", nombre: "Vinculación Social" },
+        { codigo: "ACUI173", nombre: "Socioecología" },
+        { codigo: "ACUI175", nombre: "Laboratorio Ambiental e Interpretación de Parámetros" },
+        { codigo: "ACUI177", nombre: "Toxicología Ambiental" },
+        { codigo: "ELECT118", nombre: "Optativo de Especialización IV" },
+        { codigo: "INGI079", nombre: "Formulación y Evaluación de Proyectos" },
+      ],
+      "IX": [
+        { codigo: "ACUI183", nombre: "Ética Profesional" },
+        { codigo: "ACUI187", nombre: "Integración de Metodologías para la Gestión de Proyectos Ambientales" },
+        { codigo: "ACUI200", nombre: "Proyecto de Título" },
+        { codigo: "ACUI294", nombre: "Práctica Profesional" },
+        { codigo: "ELECT112", nombre: "Optativo de Profundización I" },
+      ],
+      "X": [
+        { codigo: "ACUI298-19", nombre: "Trabajo de Título" },
+        { codigo: "ELECT116", nombre: "Optativo de Profundización II" },
+        { codigo: "ELECT126", nombre: "Optativo de Profundización III" },
+      ]
+    };
+
+    const requisitos = {
+      "ACUI060": ["ACUI051"],
+      "ACUI065": ["INGE057"],
+      "CIBA066": ["CIBA061"],
+      "CIBA071": ["CIBA061"],
+      "CIBA074": ["CIBA061"],
+      "ACUI070": ["CIBA061"],
+      "CIBA077": ["CIBA066"],
+      "CIBA080": ["CIBA071"],
+      "CIBA082": ["CIBA061"],
+      "EARO069": ["ACUI055"],
+      "INGE078": ["INGE073"],
+      "ACUI085": ["ACUI075", "CIBA080"],
+      "ACUI128": ["CIBA071"],
+      "CIBA088": ["CIBA077"],
+      "CIBA090": ["CIBA080"],
+      "DERE097": ["INGE057", "ACUI060"],
+      "INGI071": ["CIBA061"],
+      "ACUI106": ["ACUI075", "CIBA071"],
+      "ACUI133": ["ACUI075"],
+      "ACUI140": ["DERE097"],
+      "ACUI145": ["ACUI060", "CIBA090"],
+      "CIBA113": ["CIBA090", "CIBA088"],
+      "INGI076": ["CIBA061", "INGI071"],
+      "ACUI150-19": ["CIBA113"],
+      "ACUI153-19": ["ACUI145"],
+      "ACUI156-19": ["ACUI070"],
+      "CIBA151-19": ["CIBA082"],
+      "ELECT100": ["ELECT127", "ELECT128", "ELECT131"],
+      "ACUI159": ["CIBA088", "ACUI153"],
+      "ACUI161": ["ACUI153"],
+      "ACUI163": ["CIBA113", "ACUI145"],
+      "ACUI166": ["EARO069", "DERE097", "ACUI153"],
+      "ELECT101": ["ELECT127", "ELECT128", "ELECT131"],
+      "ELECT111": ["ELECT127", "ELECT128", "ELECT131"],
+      "ACUI169": ["ACUI070", "ACUI128", "INGI076"],
+      "ACUI171": ["ACUI166"],
+      "ACUI173": ["INGI076", "ACUI156-19", "ELECT100"],
+      "ACUI175": ["CIBA090", "ACUI153"],
+      "ACUI177": ["ACUI085", "ACUI156-19", "CIBA151-19"],
+      "ELECT118": ["ELECT127", "ELECT128", "ELECT131"],
+      "INGI079": ["ACUI166"],
+      "ACUI183": ["ACUI173"],
+      "ACUI187": ["ACUI159", "ACUI171", "ACUI169", "INGI079"],
+      "ACUI200": ["ACUI294"],
+      "ACUI294": ["ACUI187"],
+      "ACUI298-19": ["ACUI200"],
+      "ELECT116": ["ELECT100", "ELECT101", "ELECT111", "ELECT118"],
+      "ELECT126": ["ELECT100", "ELECT101", "ELECT111", "ELECT118"]
+    };
+
+    const aprobados = new Set();
+
+    function crearMalla() {
+      const contenedor = document.getElementById('malla');
+      contenedor.innerHTML = '';
+
+      Object.keys(ramos).forEach(semestre => {
+        const div = document.createElement('div');
+        div.className = 'semestre';
+        const h3 = document.createElement('h3');
+        h3.textContent = `Semestre ${semestre}`;
+        div.appendChild(h3);
+
+        ramos[semestre].forEach(ramo => {
+          const divRamo = document.createElement('div');
+          divRamo.textContent = `${ramo.codigo}: ${ramo.nombre}`;
+          divRamo.className = 'ramo';
+
+          const prereqs = requisitos[ramo.codigo];
+          if (prereqs && !prereqs.every(c => aprobados.has(c))) {
+            divRamo.classList.add('bloqueado');
+          } else {
+            divRamo.addEventListener('click', () => {
+              aprobados.has(ramo.codigo)
+                ? aprobados.delete(ramo.codigo)
+                : aprobados.add(ramo.codigo);
+              crearMalla();
+            });
+          }
+
+          if (aprobados.has(ramo.codigo)) {
+            divRamo.classList.add('aprobado');
+          }
+
+          div.appendChild(divRamo);
+        });
+
+        contenedor.appendChild(div);
+      });
+    }
+
+    crearMalla();
+  </script>
+</body>
+</html>
